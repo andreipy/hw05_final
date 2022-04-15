@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Ошибка 500 - внутренняя ошибка сервера{% endblock %}
+{% block content %}
+  <h1>Упс! Ошибка 500 - Internal Server Error</h1>
+  <a href="{% url 'posts:index' %}">На главную</a>
+{% endblock %}
