@@ -5,19 +5,6 @@
         <div class="card-body">
           <p>
             {{ card_body }}
-            {% if 'users:password_change'%}
-            {% with form_button='Изменить пароль' %}
-            {% elif 'users:password_reset_confirm'%}
-            {% with form_button='Назначить новый пароль' %}
-            {% elif 'users:password_reset'%}
-            {% with form_button='Сбросить пароль' %}
-            {% elif 'users:signup'%}
-            {% with form_button='Зарегистрироваться' %}
-            {% elif 'users:login'%}
-            {% with form_button='Войти' %}
-            {% endif %}
-            {% include 'users/includes/form.html' %} 
-            {% endwith %}
           </p>
         </div> <!-- card body -->
       </div> <!-- card -->
