@@ -4,7 +4,7 @@ from django.db import models
 
 User = get_user_model()
 
-CHARS_OF_POST = 15
+DISPLAYED_CHARS = 15
 
 
 class Group(models.Model):
@@ -12,6 +12,10 @@ class Group(models.Model):
     slug = models.SlugField(unique=True, verbose_name='Группа')
     description = models.TextField(max_length=300,
                                    verbose_name='Описание группы')
+
+    class Meta:
+        verbose_name = 'Группа'
+        verbose_name_plural = 'Группы'
 
     def __str__(self):
         return self.title
@@ -47,7 +51,7 @@ class Post(CreatedModel):
         verbose_name_plural = 'Посты'
 
     def __str__(self):
-        return self.text[:CHARS_OF_POST]
+        return self.text[:DISPLAYED_CHARS]
 
 
 class Comment(CreatedModel):
@@ -65,6 +69,14 @@ class Comment(CreatedModel):
     text = models.TextField(verbose_name='Текст комментария',
                             help_text='Введите текст поста')
 
+    class Meta:
+        ordering = ['-created']
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return self.text[:DISPLAYED_CHARS]
+
 
 class Follow(models.Model):
     user = models.ForeignKey(
@@ -79,3 +91,15 @@ class Follow(models.Model):
         related_name='following',
         verbose_name='Имя автора'
     )
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'author'],
+                                    name='unique_following'
+                                    )
+        ]
+
+    def __str__(self):
+        return f'Подписка {self.user} на {self.author}'

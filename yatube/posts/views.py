@@ -8,7 +8,10 @@ from .utils import pagination
 
 def index(request):
     context = {
-        'page_obj': pagination(request, Post.objects.all())
+        'page_obj': pagination(
+            request, Post.objects.select_related('group').all()
+        ),
+        'index': True
     }
     return render(request, 'posts/index.html', context)
 
@@ -27,7 +30,9 @@ def profile(request, username):
     following = (request.user.is_authenticated) and (Follow.objects.filter(
         user__username=request.user, author=author).exists())
     context = {
-        'page_obj': pagination(request, author.posts.all()),
+        'page_obj': pagination(request, (
+            Post.objects.select_related('author').filter(author=author))
+        ),
         'author': author,
         'following': following
     }
@@ -101,7 +106,8 @@ def follow_index(request):
     context = {
         'page_obj': pagination(request, Post.objects.filter(
             author__following__user=follower)),
-        'follower': follower
+        'follower': follower,
+        'follow': True
     }
     return render(request, 'posts/follow.html', context)
 
@@ -109,25 +115,17 @@ def follow_index(request):
 @login_required
 def profile_follow(request, username):
     follower = request.user
-    author = User.objects.get(username=username)
+    author = get_object_or_404(User, username=username)
     if follower != author:
         Follow.objects.get_or_create(
             user=follower, author=author)
-    context = {
-        'page_obj': pagination(request, Post.objects.filter(author=author)),
-        'author': author
-    }
-    return render(request, 'posts/profile.html', context)
+    return redirect('posts:profile', username=username)
 
 
 @login_required
 def profile_unfollow(request, username):
     follower = request.user
-    author = User.objects.get(username=username)
+    author = get_object_or_404(User, username=username)
     Follow.objects.filter(
         user=follower, author=author).delete()
-    context = {
-        'page_obj': pagination(request, Post.objects.filter(author=author)),
-        'author': author
-    }
-    return render(request, 'posts/profile.html', context)
+    return redirect('posts:profile', username=username)

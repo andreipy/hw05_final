@@ -194,13 +194,16 @@ class PostViewTest(TestCase):
         )
         self.assertNotEqual(old_response, new_response)
 
-    def test_follow_and_unfollow_for_authorized(self):
-        """Авторизованный юзер может подписываться и удалять из подписок"""
+    def test_following_for_authorized(self):
+        """Авторизованный юзер может подписываться"""
         self.authorized_client.get(reverse('posts:profile_follow', kwargs={
             'username': 'SomeUser'}))
         self.assertTrue(
             Follow.objects.filter(user=self.user,
                                   author=PostViewTest.user).exists())
+
+    def test_unfollowing_for_authorized(self):
+        """Авторизованный юзер может отписываться"""
         self.authorized_client.get(reverse('posts:profile_unfollow', kwargs={
             'username': 'SomeUser'}))
         self.assertFalse(
