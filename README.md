@@ -3,6 +3,7 @@
 [![CI](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/yandex-praktikum/hw05_final/actions/workflows/python-app.yml)
 
 Учебный проект, представляющий собой небольшую социальную сеть, больше похожую на сайт с личными дневниками с простым дизайном и функционалом.
+
 Возможности:
 - регистрация
 - постинг по сообществам на разную тематику, редактирование своих постов
